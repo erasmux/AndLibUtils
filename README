@@ -1,0 +1,5 @@
+AndLibUtils is small utility I wrote to help me do some low level "hacks" of android shared library files.
+
+The compile script shows how to compile it.
+
+The andlibutils script shows how to run it.

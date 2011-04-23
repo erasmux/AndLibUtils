@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p classes
+echo javac -sourcepath src -d classes src/AndLibUtils.java
+javac -sourcepath src -d classes src/AndLibUtils.java
