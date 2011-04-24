@@ -20,6 +20,7 @@ public class ElfReader {
     private int sectHdrEntrySize_ = 0;
     private int sectHdrEntries_ = 0;
     private int sectHdrStringTableIndex_ = 0;
+    private boolean lastMatchExact_ = false;
 
     static private class SectionHeader {
         public long nameIndex_;
@@ -155,8 +156,10 @@ public class ElfReader {
                         }
                         ii = (ii+1) % n;
                     }
-                    if (found)
+                    if (found) {
+                        lastMatchExact_ = length == n;
                         return currentOffsetInSection()-n-1;
+                    }
                 }
                 length = 0;
             } else {
@@ -166,6 +169,10 @@ public class ElfReader {
             }
         }
         return -1;
+    }
+
+    public boolean lastMatchWasExact() {
+        return lastMatchExact_;
     }
 
     public void readSections() throws IOException {

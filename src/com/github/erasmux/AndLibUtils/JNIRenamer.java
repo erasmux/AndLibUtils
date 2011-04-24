@@ -114,9 +114,10 @@ public class JNIRenamer {
     }
 
     /// searches the given section for the given string returning all the offset it is found at.
-    /// if onlyFirst is true only the first match is returned.
+    /// if onlyBest is true than preferably an exact match is returned, if there is no exact match
+    /// the last non-exact match is returned.
     /// label is just for printing message and denotes what string we are looking for.
-    private Set<Long> findStringInSection(String str, String section, boolean onlyFirst, long deltaOfs,
+    private Set<Long> findStringInSection(String str, String section, boolean onlyBest, long deltaOfs,
                                           String label, PrintStream log, PrintStream err) throws IOException {
         if (str.length() < 1) {
             if (err != null)
@@ -129,14 +130,20 @@ public class JNIRenamer {
         Set<Long> offsets = new TreeSet<Long>();
         reader_.seekSection(section,0);
         long sectionAddr = reader_.sectionAddr(section);
-        long findOfs;
+        long lastMatch=-1,findOfs;
         while ( (findOfs=reader_.seekString(str)) >= 0 ) {
-            offsets.add(new Long(findOfs+deltaOfs));
+            if (onlyBest)
+                lastMatch = findOfs+deltaOfs;
+            else
+                offsets.add(new Long(findOfs+deltaOfs));
             if (log!=null)
                 log.println(String.format("  found "+label+" @ 0x%08X",findOfs+sectionAddr));
-            if (onlyFirst)
+            if (onlyBest && reader_.lastMatchWasExact())
                 break;
         }
+
+        if (onlyBest && lastMatch > -1)
+            offsets.add(new Long(lastMatch));
 
         if (offsets.size() <= 0) {
             if (err != null)
