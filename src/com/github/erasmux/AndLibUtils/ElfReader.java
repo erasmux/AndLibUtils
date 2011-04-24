@@ -243,4 +243,9 @@ public class ElfReader {
         }
         currentSection_ = null;
     }
+
+    public void close() throws IOException {
+        raf_.close();
+    }
+
 }

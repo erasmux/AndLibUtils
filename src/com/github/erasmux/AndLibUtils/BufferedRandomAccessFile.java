@@ -107,4 +107,8 @@ public class BufferedRandomAccessFile {
         return pos_;
     }
 
+    public void close() throws IOException {
+        raf_.close();
+    }
+
 }

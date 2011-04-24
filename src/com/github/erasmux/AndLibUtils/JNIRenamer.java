@@ -146,6 +146,9 @@ public class JNIRenamer {
         return offsets;
     }
 
+    public void close() throws IOException {
+        reader_.close();
+    }
 
     // Functions for Command line interface:
 
@@ -216,7 +219,7 @@ public class JNIRenamer {
         File temp = null;
         int tempCount = 0;
         while (temp == null) {
-            temp = new File(out.getParentFile(),out.getName()+String.format(".temp%4d",tempCount));
+            temp = new File(out.getParentFile(),out.getName()+String.format(".temp%04d",tempCount++));
             if (temp.exists())
                 temp = null;
         }
@@ -232,9 +235,15 @@ public class JNIRenamer {
 
             boolean ok = renamer.rename(functionSig, newName,
                                         verbose ? System.out : null, System.err);
+            renamer.close();
+
             if (ok) {
                 // move temp to out overwritting if necesarry:
-                if ( (out.exists() && !out.delete()) || !temp.renameTo(out) ) {
+                if (out.exists() && !out.delete()) {
+                    System.err.println("Error clearing previous output file "+out.getPath());
+                    status = 3;
+                }
+                else if ( !temp.renameTo(out) ) {
                     System.err.println("Error moving temporary file "+temp.getPath()+" to "+out.getPath());
                     status = 3;
                 }
