@@ -1,4 +1,7 @@
 #!/bin/sh
+echo cleaning previous build...
+rm -rf classes
 mkdir -p classes
+echo compiling...
 echo javac -sourcepath src -d classes src/AndLibUtils.java
 javac -sourcepath src -d classes src/AndLibUtils.java

@@ -79,10 +79,10 @@ public class Prelinked {
         return false;
     }
 
-    public static void Run(String args[]) {
+    public static int Run(String args[]) {
         if (args.length < 3 || !CheckArgs(args)) {
             PrintUsage();
-            return;
+            return 1;
         }
 
         String outfile = null;
@@ -99,8 +99,8 @@ public class Prelinked {
             try {
                 out = new PrintStream(new File(outfile));
             } catch (IOException e) {
-                System.out.println("Error opening output file:"+e.getMessage());
-                return;
+                System.err.println("Error opening output file: "+e.getMessage());
+                return 3;
             }
 
 
@@ -122,13 +122,14 @@ public class Prelinked {
                 }
             });
         // check actual prelinked status of each file:
-        int count=0;
+        int count=0, errors=0;
         for (Iterator<String> iter = files.iterator(); iter.hasNext(); ++count) {
             String fname = iter.next();
             try {
                 plmap.add(new Prelinked(new File(fname)));
             } catch (Exception e) {
-                System.out.println("Error processing file "+fname+": "+e.getMessage());                
+                System.err.println("Error processing file "+fname+": "+e.getMessage());
+                errors++;
             }
         }
 
@@ -141,7 +142,9 @@ public class Prelinked {
                 out.println("not prelinked:          "+prelink.filename());
         }
 
-        System.out.println("Processed "+Integer.toString(count)+" files.");
+        System.out.println("Processed "+Integer.toString(count)+" files"
+                           +(errors>0 ? String.format(" (%d errors).",errors) : "."));
+        return errors>0 ? 5 : 0;
     }
 
 }
