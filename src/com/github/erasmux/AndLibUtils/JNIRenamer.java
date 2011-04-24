@@ -40,11 +40,6 @@ public class JNIRenamer {
                 err.println("ERROR: File "+filename()+" is not a valid ELF!");
             return false;
         }
-        if (prelinked_ <= 0) {
-            if (err != null)
-                err.println("ERROR: File "+filename()+" is not prelinked?!");
-            return false;
-        }
         if (!reader_.hasSection(".data")) {
             if (err != null)
                 err.println("ERROR: File "+filename()+" does not have a .data section?!");
@@ -57,11 +52,15 @@ public class JNIRenamer {
         }
 
         long rodataAddr = reader_.sectionAddr(".rodata");
-        long rodataBaseAddr = rodataAddr + prelinked_;
+        long rodataBaseAddr = rodataAddr;
+        if (prelinked_ >= 0)
+            rodataBaseAddr += prelinked_;
         if (log != null) {
-            log.println(String.format("file prelinked  @ 0x%08X",prelinked_));
             log.println(String.format(".rodata section @ 0x%08X",rodataAddr));
-            log.println(String.format("=> .rodata base @ 0x%08X",rodataBaseAddr));
+            if (prelinked_ >= 0) {
+                log.println(String.format("file prelinked  @ 0x%08X",prelinked_));
+                log.println(String.format("=> .rodata base @ 0x%08X",rodataBaseAddr));
+            }
         }
 
         int splitSig = functionSig.indexOf('(');
