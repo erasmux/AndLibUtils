@@ -226,7 +226,7 @@ public class JNIRenamer {
             if (args[ii].equals("-o") && (ii+1)<args.length) {
                 outfile = args[++ii];
                 if (!rename) {
-                    System.err.print("Warning: invalid argument -o for "+args[1]+" command, ignoring: -o "+outfile);
+                    System.err.println("Warning: invalid argument -o for "+args[1]+" command, ignoring: -o "+outfile);
                     outfile = null;
                 }
             }
