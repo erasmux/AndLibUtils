@@ -285,7 +285,7 @@ public class JNIRenamer {
                 if (count > 1)
                     System.err.println(String.format("Warning: Found and replaced %d matches?!",count));
 
-                if (count >= 0) {
+                if (count > 0) {
                     // move temp to out overwritting if necesarry:
                     if (out.exists() && !out.delete()) {
                         System.err.println("Error clearing previous output file "+out.getPath());
@@ -296,7 +296,11 @@ public class JNIRenamer {
                         status = -3;
                     }
                     System.out.println("Result written to "+out.getPath());
-                } else status = -5;
+                }
+                else if (count == 0)
+                    status = 1;
+                else // count < 0
+                    status = -5;
             }
             else { // find
                 JNIRenamer renamer = new JNIRenamer(in,in.getPath(),true);
