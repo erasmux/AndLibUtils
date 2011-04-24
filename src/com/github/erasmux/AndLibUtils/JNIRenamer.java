@@ -8,12 +8,14 @@ import java.nio.channels.*;
 public class JNIRenamer {
 
     private File file_;
+    private String fileName_;
     private ElfReader reader_;
     private long prelinked_;
 
 
-    public JNIRenamer(File file) throws IOException, FileNotFoundException {        
+    public JNIRenamer(File file,String filename) throws IOException, FileNotFoundException {        
         file_ = file;
+        fileName_ = filename;
         
         RandomAccessFile raf = new RandomAccessFile(file,"r");
         prelinked_ = Prelinked.GetPrelinkAddr(raf);
@@ -29,7 +31,7 @@ public class JNIRenamer {
     }
 
     public String filename() {
-        return file_.getName();
+        return fileName_;
     }
 
     public boolean rename(String functionSig, String newName, PrintStream log, PrintStream err) throws IOException {
@@ -231,7 +233,7 @@ public class JNIRenamer {
 
             copyFile(in,temp);
 
-            JNIRenamer renamer = new JNIRenamer(temp);
+            JNIRenamer renamer = new JNIRenamer(temp,in.getPath());
 
             boolean ok = renamer.rename(functionSig, newName,
                                         verbose ? System.out : null, System.err);
