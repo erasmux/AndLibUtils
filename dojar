@@ -1,0 +1,2 @@
+#!/bin/sh
+jar cfm AndLibUtils.jar Manifest.txt -C classes com
