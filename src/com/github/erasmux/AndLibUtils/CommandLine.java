@@ -5,7 +5,7 @@ public class CommandLine {
 
     static String Command = "AndLibUtils";
     
-    static String Version = "1.0";
+    static String Version = "1.1";
 
     public static void main(String args[]) {
         int status = -1;
