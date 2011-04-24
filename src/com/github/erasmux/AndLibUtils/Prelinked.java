@@ -72,6 +72,7 @@ public class Prelinked {
     public static boolean Help(String args[]) {
         if (args.length >= 2 && args[1].equals(CommandName)) {
             PrintUsage();
+            System.out.println();
             System.out.println("Checks the prelinked address of the specificed files.");
             System.out.println(" -o outfile : logs output to given file");
             return true;
@@ -82,7 +83,7 @@ public class Prelinked {
     public static int Run(String args[]) {
         if (args.length < 3 || !CheckArgs(args)) {
             PrintUsage();
-            return 1;
+            return -1;
         }
 
         String outfile = null;
@@ -100,7 +101,7 @@ public class Prelinked {
                 out = new PrintStream(new File(outfile));
             } catch (IOException e) {
                 System.err.println("Error opening output file: "+e.getMessage());
-                return 3;
+                return -3;
             }
 
 
@@ -144,7 +145,7 @@ public class Prelinked {
 
         System.out.println("Processed "+Integer.toString(count)+" files"
                            +(errors>0 ? String.format(" (%d errors).",errors) : "."));
-        return errors>0 ? 5 : 0;
+        return errors>0 ? -5 : 0;
     }
 
 }

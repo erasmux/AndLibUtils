@@ -8,7 +8,7 @@ public class CommandLine {
     static String Version = "1.0";
 
     public static void main(String args[]) {
-        int status = 1;
+        int status = -1;
 
         if (args.length < 1)
             usage();
@@ -33,6 +33,7 @@ public class CommandLine {
 
     static void usage() {
         System.out.println("usage: "+Command+" <option> [<flags>]");
+        System.out.println();
         System.out.println("Availble options are:");
         System.out.println("   "+JNIRenamer.Usage());
         System.out.println("   "+Prelinked.Usage());
